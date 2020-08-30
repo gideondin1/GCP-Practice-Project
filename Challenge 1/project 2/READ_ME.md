@@ -30,18 +30,41 @@ In this lab,the following tasks were performed:
 
 -Click Management, security, disks, networking, sole tenancy to open that section of the dialog.
 
-Enter the following script as the value for Startup script:
-apt-get update
-apt-get install apache2 php php-mysql -y
-service apache2 restart
-##
+## Enter the following script as the value for Startup script:
 
-## To create a VM instance using the gcloud command-line interface , execute this command:
+apt-get update \
+apt-get install apache2 php php-mysql -y \
+service apache2 restart 
 
-gcloud compute instances create "my-vm-2" \
---machine-type "n1-standard-1" \
---image-project "debian-cloud" \
---image "debian-9-stretch-v20190213" \
---subnet "default"
+-Leave the remaining settings as their defaults, and click Create.
 
-//text in quotes are variables 
+## Task 3: Create a Cloud Storage bucket using the gsutil command line
+
+>All Cloud Storage bucket names must be globally unique. To ensure that your bucket name is unique, these instructions will guide you to give your bucket the same name as your Cloud Platform project ID, which is also globally unique.
+>
+>Cloud Storage buckets can be associated with either a region or a multi-region location: US, EU, or ASIA. In this activity, you associate your bucket with the multi-region closest to the region and zone that Qwiklabs or your instructor assigned you to.
+
+
+-For convenience, enter your chosen location into an environment variable called LOCATION. Enter one of these commands:
+**export LOCATION=US**
+
+-In Cloud Shell, the DEVSHELL_PROJECT_ID environment variable contains your project ID. Enter this command to make a bucket named after your project ID:
+
+**gsutil mb -l $LOCATION gs://$DEVSHELL_PROJECT_ID**
+
+-Retrieve a banner image from a publicly accessible Cloud Storage location:
+
+**gsutil cp gs://cloud-training/gcpfci/my-excellent-blog.png my-excellent-blog.png**
+
+-Copy the banner image to your newly created Cloud Storage bucket:
+
+**gsutil cp my-excellent-blog.png gs://$DEVSHELL_PROJECT_ID/my-excellent-blog.png**
+
+-Modify the Access Control List of the object you just created so that it is readable by everyone:
+
+**gsutil acl ch -u allUsers:R gs://$DEVSHELL_PROJECT_ID/my-excellent-blog.png**
+
+## Task 4: Create the Cloud SQL instance
+
+## Task 5: Configure an application in a Compute Engine instance to use Cloud SQL
+
