@@ -1,4 +1,11 @@
-#
+# Google Cloud Fundamentals: Getting Started with GKE
+
+## Objectives
+
+> -In this lab, you learn how to perform the following tasks:
+>-Provision a Kubernetes cluster using Kubernetes Engine.
+
+Deploy and manage Docker containers using kubectl.
 ## Task 2: Confirm that needed APIs are enabled
 >In the GCP Console, on the Navigation menu (Navigation menu), click 
 APIs & Services.Scroll down in the list of enabled APIs, and confirm
