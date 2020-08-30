@@ -1,47 +1,58 @@
-# Google Cloud Fundamentals: Getting Started with Cloud Storage and Cloud SQL
-In this lab,the following tasks were performed:
+# Task 2: Confirm that needed APIs are enabled
+>In the GCP Console, on the Navigation menu (Navigation menu), click 
+APIs & Services.Scroll down in the list of enabled APIs, and confirm
+ that both of these APIs are enabled:
 
-## Objectives
--Creation of a Cloud Storage bucket and place an image into it.
+**Kubernetes Engine API**
+**Container Registry API**
 
--Creation of a Cloud SQL instance and configure it.
+If either API is missing, click Enable APIs and Services at the top. 
+Search for the above APIs by name and enable each for your current 
+project. (You noted the name of your GCP project above.)
 
--Connecting to the Cloud SQL instance from a web server.
+# Task 3: Start a Kubernetes Engine cluster
+>Start cloud Shell
 
--Use the image in the Cloud Storage bucket on a web page.
+For convenience, place the zone that Qwiklabs assigned you to into an environment variable called MY_ZONE. At the Cloud Shell prompt, type this partial command:
 
-## Task 1: Sign in to the Google Cloud Platform (GCP) Console
-## Task 2: Deploy a web server VM instance
--In the GCP Console, on the Navigation menu (Navigation menu), click Compute Engine > VM instances.
+export MY_ZONE=
+e.g; 
+export MY_ZONE=us-central1-a
 
--Click Create.
+>Start a Kubernetes cluster managed by Kubernetes Engine. 
+Name the cluster webfrontend and configure it to run 2 nodes:
 
--On the Create an Instance page, for Name, type bloghost
+**gcloud container clusters create webfrontend --zone $MY_ZONE --num-nodes 2**
 
--For Region and Zone, select the region and zone assigned by Qwiklabs.
+check your installed version of Kubernetes using the kubectl version command:
 
--For Machine type, accept the default.
+**kubectl version**
 
--For Boot disk, if the Image shown is not Debian GNU/Linux 9 (stretch), click Change and select Debian GNU/Linux 9 (stretch).
+# Task 4: Run and deploy a container
+>From your Cloud Shell prompt, launch a single instance of the nginx container. (Nginx is a popular web server.)
 
--Leave the defaults for Identity and API access unmodified.
+**kubectl create deploy nginx --image=nginx:1.17.10**
 
--For Firewall, click Allow HTTP traffic.
+View the pod running the nginx container:
 
--Click Management, security, disks, networking, sole tenancy to open that section of the dialog.
+**kubectl get pods**
 
-Enter the following script as the value for Startup script:
-apt-get update
-apt-get install apache2 php php-mysql -y
-service apache2 restart
-##
+Expose the nginx container to the Internet:
 
-## To create a VM instance using the gcloud command-line interface , execute this command:
+**kubectl expose deployment nginx --port 80 --type LoadBalancer**
 
-gcloud compute instances create "my-vm-2" \
---machine-type "n1-standard-1" \
---image-project "debian-cloud" \
---image "debian-9-stretch-v20190213" \
---subnet "default"
+View the new service:
 
-//text in quotes are variables 
+**kubectl get services**
+
+Scale up the number of pods running on your service:
+
+**kubectl scale deployment nginx --replicas 3**
+
+Confirm that Kubernetes has updated the number of pods:
+
+**kubectl get pods**
+
+Confirm that your external IP address has not changed:
+
+**kubectl get services**
